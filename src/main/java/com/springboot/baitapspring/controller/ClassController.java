@@ -2,6 +2,8 @@ package com.springboot.baitapspring.controller;
 
 import com.springboot.baitapspring.model.entity.Class;
 import com.springboot.baitapspring.model.entity.Student;
+import com.springboot.baitapspring.model.in.ClassRequest;
+import com.springboot.baitapspring.model.out.ClassDto;
 import com.springboot.baitapspring.services.ClassService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -12,36 +14,36 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/class")
+@RequestMapping("/classes")
 public class ClassController {
     @Autowired
     private ClassService classService;
 
-    @PostMapping("/save")
-    public ResponseEntity<?> save(@RequestBody Class clazz){
-        classService.saveClass(clazz);
+    @PostMapping
+    public ResponseEntity<?> save(@RequestBody ClassRequest classRequest){
+        classService.saveClass(classRequest);
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteClass(@PathVariable long id){
         classService.deleteClass(id);
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/update")
-    public ResponseEntity<?> updateClass(@RequestBody Class clazz){
-       classService.updateClass(clazz);
+    @PutMapping
+    public ResponseEntity<?> updateClass(@RequestBody ClassRequest classRequest){
+       classService.updateClass(classRequest);
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/get/{id}") //lấy class theo id
+    @GetMapping("/{id}") //lấy class theo id
     public ResponseEntity<?> findClazz(@PathVariable long id){
-        Class clazzs = classService.findClass(id);
-        return ResponseEntity.ok(clazzs);
+        ClassDto classDto = classService.findClass(id);
+        return ResponseEntity.ok(classDto);
     }
 
-    @GetMapping("/findallstudent/{id}")
+    @GetMapping("/students-id/{id}")
     public ResponseEntity<?> findAllStudent(@PathVariable long id){
         //lấy danh sách học sinh theo sinh viên
         List<Student> list = classService.findAllStudents(id);

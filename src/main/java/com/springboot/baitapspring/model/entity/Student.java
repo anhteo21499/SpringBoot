@@ -2,6 +2,8 @@ package com.springboot.baitapspring.model.entity;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -18,6 +20,7 @@ public class Student {
     private long id;
     @Column
     private String name;
+
     @Column
     private LocalDate birthday;
     @Column
@@ -25,8 +28,9 @@ public class Student {
     @Column
     private String phone;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "student_id")
+    @NotFound(action = NotFoundAction.IGNORE)
     private Class clazz;
 
 }

@@ -21,7 +21,7 @@ public class Class {
     private long id;
     @Column
     private String name;
-    @OneToMany(mappedBy = "clazz")
+    @OneToMany(mappedBy = "clazz", fetch = FetchType.LAZY)
     @JsonIgnore
     private List<Student> listStudent = new ArrayList<>();
 

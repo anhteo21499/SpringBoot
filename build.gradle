@@ -25,6 +25,11 @@ dependencies {
     }
     compileOnly 'org.projectlombok:lombok:1.18.4'
     annotationProcessor 'org.projectlombok:lombok:1.18.4'
+    // https://mvnrepository.com/artifact/org.hibernate/hibernate-validator
+    compile group: 'org.hibernate', name: 'hibernate-validator', version: '6.1.0.Final'
+// https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
+    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.4'
+
 }
 
 test {

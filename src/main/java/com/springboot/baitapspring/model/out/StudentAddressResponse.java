@@ -1,4 +1,4 @@
-package com.springboot.baitapspring.model.respon;
+package com.springboot.baitapspring.model.out;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

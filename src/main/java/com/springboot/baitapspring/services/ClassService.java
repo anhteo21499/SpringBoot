@@ -2,17 +2,19 @@ package com.springboot.baitapspring.services;
 
 import com.springboot.baitapspring.model.entity.Class;
 import com.springboot.baitapspring.model.entity.Student;
+import com.springboot.baitapspring.model.in.ClassRequest;
+import com.springboot.baitapspring.model.out.ClassDto;
 
 import java.util.List;
 
 public interface ClassService {
-    void saveClass(Class clazz);
+    void saveClass(ClassRequest classRequest);
 
-    void updateClass(Class clazz);
+    void updateClass(ClassRequest classRequest);
 
     void deleteClass(long id);
 
-    Class findClass(long id);
+    ClassDto findClass(long id);
 
     List<Student> findAllStudents(long id);
 

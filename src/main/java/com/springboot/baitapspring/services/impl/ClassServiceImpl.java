@@ -4,9 +4,13 @@ import com.springboot.baitapspring.exception.DuplicateRecordException;
 import com.springboot.baitapspring.exception.NotFoundException;
 import com.springboot.baitapspring.model.entity.Class;
 import com.springboot.baitapspring.model.entity.Student;
+import com.springboot.baitapspring.model.in.ClassRequest;
+import com.springboot.baitapspring.model.out.ClassDto;
 import com.springboot.baitapspring.repositories.ClassRepository;
 import com.springboot.baitapspring.repositories.StudentRepository;
 import com.springboot.baitapspring.services.ClassService;
+import com.springboot.baitapspring.services.mapper.ClassMapper;
+import com.springboot.baitapspring.services.validators.ClassValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,26 +25,28 @@ public class ClassServiceImpl implements ClassService {
     private StudentRepository studentRepository;
 
     @Override
-    public void saveClass(Class clazz) {
-        boolean checkClassExists = checkClass(clazz.getName());
+    public void saveClass(ClassRequest classRequest) {
+        boolean checkClassExists = checkClassExit(classRequest.getName());
         if (!checkClassExists) {
             throw new DuplicateRecordException("Class name already exists in the system");
         }
         if (checkClassExists) {
-            classRepository.save(clazz);
+            ClassRequest classRequests = ClassValidator.validateObjectSave(classRequest);
+            classRepository.save(ClassMapper.toClassSave(classRequests));
         }
     }
 
     @Override
-    public void updateClass(Class clazz) {
+    public void updateClass(ClassRequest classRequest) {
         boolean check = false;
-        boolean checkClassExist = checkClass(clazz.getName());
+        boolean checkClassExist = checkClassExit(classRequest.getName());
         List<Class> list = getAllClasses();
         if (checkClassExist) {
             for (Class clazzs : list) {
-                if (clazzs.getId() == clazz.getId()) {
-                    Class findClass = classRepository.findById(clazz.getId()).orElse(null);
-                    findClass.setName(clazz.getName());
+                if (clazzs.getId() == classRequest.getId()) {
+                    Class findClass = classRepository.findById(classRequest.getId()).orElse(null);
+                    ClassMapper.toClassUpdate(findClass,classRequest);
+//                    findClass.setName(classRequest.getName());
                     classRepository.save(findClass);
                     check = true;
                     break;
@@ -52,34 +58,14 @@ public class ClassServiceImpl implements ClassService {
         if (!check) {
             throw new NotFoundException("No class found");
         }
-//        boolean check = false;
-//        boolean checkClassExist = checkClass(clazz.getName());
-//        List<Class> list = getAllClasses();
-//        for (Class clazzs : list) {
-//            if (clazzs.getId() == id) {
-//                Class findClass = classRepository.findById(id).orElse(null);
-//                if (checkClassExist) {
-//                    findClass.setName(clazz.getName());
-//                    classRepository.save(findClass);
-//                    check = true;
-//                    break;
-//                } else {
-//                    throw new DuplicateRecordException("Class name already exists in the system");
-//                }
-//
-//            }
-//        }
-//        if (!check) {
-//            throw new NotFoundException("No class found");
-//        }
     }
 
     @Override
     public void deleteClass(long id) {
         boolean check = false;
-        List<Class> list = getAllClasses();
-        for (Class clazzs : list) {
-            if (clazzs.getId() == id) {
+        List<Class> listClass = getAllClasses();
+        for (Class classes : listClass) {
+            if (classes.getId() == id) {
                 Class clazz = classRepository.findById(id).orElse(null);
                 classRepository.delete(clazz);
                 check = true;
@@ -92,11 +78,11 @@ public class ClassServiceImpl implements ClassService {
     }
 
     //kiểm tra tên lớp đã tồn tại chưa
-    public boolean checkClass(String className) {
+    public boolean checkClassExit(String className) {
         boolean check = true;
         List<Class> list = getAllClasses();
-        for (Class clazzs : list) {
-            if (clazzs.getName().equals(className)) {
+        for (Class classes : list) {
+            if (classes.getName().equals(className)) {
                 check = false;
                 break;
             }
@@ -107,8 +93,14 @@ public class ClassServiceImpl implements ClassService {
 
 
     @Override //lấy ra class theo id
-    public Class findClass(long id) {
-        return classRepository.findById(id).orElse(null);
+    public ClassDto findClass(long id) {
+        List<Class> list = getAllClasses();
+        for (Class classes : list) {
+            if (classes.getId() == id) {
+                return ClassMapper.toClassDto(classRepository.findById(id).orElse(null));
+            }
+        }
+        throw new NotFoundException("No class found");
     }
 
     @Override
