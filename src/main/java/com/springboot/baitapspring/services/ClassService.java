@@ -16,10 +16,7 @@ public interface ClassService {
 
     ClassDto findClass(long id);
 
-    List<Student> findAllStudents(long id);
-
-    List<Class> getAllClasses(); // lấy tất cả các classs trong database
-    //List<Class> findStudentById(long id);
+    //List<Student> findAllStudents(long id);
 
 
 }

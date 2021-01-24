@@ -43,11 +43,11 @@ public class ClassController {
         return ResponseEntity.ok(classDto);
     }
 
-    @GetMapping("/students-id/{id}")
-    public ResponseEntity<?> findAllStudent(@PathVariable long id){
-        //lấy danh sách học sinh theo sinh viên
-        List<Student> list = classService.findAllStudents(id);
-        return ResponseEntity.ok(list);
-     }
+//    @GetMapping("/{id}/students")
+//    public ResponseEntity<?> findAllStudent(@PathVariable long id){
+//        //lấy danh sách học sinh theo sinh viên
+//        List<Student> list = classService.findAllStudents(id);
+//        return ResponseEntity.ok(list);
+//     }
 
 }

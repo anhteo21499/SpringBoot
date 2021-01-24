@@ -16,11 +16,15 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
     @Query(value = "select s from Student s where s.id = ?1 ")
     List<Student> findStudentById(long id);
 
-    @Query("select s from Student s")
-    List<Student> getAllStudent();
+//    @Query("select s from Student s")
+//    List<Student> getAllStudent();
 
-    @Query(value = "select new com.springboot.baitapspring.model.out.StudentAddressResponse( s.address , count(s.id) ) from Student s group by s.address")
-    List<StudentAddressResponse> getAllAddressTotal();
+    Student getStudentByPhone(String phone);
+
+    Student getStudentById(long id);
+
+//    @Query(value = "select new com.springboot.baitapspring.model.out.StudentAddressResponse( s.address , count(s.id) ) from Student s group by s.address")
+//    List<StudentAddressResponse> getAllAddressTotal();
 
     List<Student> findStudentByAddressAndName(String address, String name);
 //        @Query(value = "select * from student s  where s.student_id = ?1",nativeQuery = true)

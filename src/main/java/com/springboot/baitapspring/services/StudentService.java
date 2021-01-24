@@ -1,11 +1,6 @@
 package com.springboot.baitapspring.services;
 
-import com.springboot.baitapspring.model.entity.Student;
 import com.springboot.baitapspring.model.in.StudentRequest;
-import com.springboot.baitapspring.model.out.StudentAddressResponse;
-import com.springboot.baitapspring.model.out.StudentDto;
-
-import java.util.List;
 
 public interface StudentService {
     void saveStudent(StudentRequest studentRequest);
@@ -14,9 +9,9 @@ public interface StudentService {
 
     void deleteStudent(long id);
 
-    StudentDto findStudentByID(long id);
+    boolean findStudentByID(long id);
 
-    List<Student> getAllStudents();
+ //   List<Student> getAllStudents();
 
  //   List<StudentAddressResponse> getAddressAndCount();
 

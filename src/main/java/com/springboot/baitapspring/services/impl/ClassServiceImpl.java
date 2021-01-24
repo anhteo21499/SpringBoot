@@ -26,102 +26,49 @@ public class ClassServiceImpl implements ClassService {
 
     @Override
     public void saveClass(ClassRequest classRequest) {
-        boolean checkClassExists = checkClassExit(classRequest.getName());
-        if (!checkClassExists) {
-            throw new DuplicateRecordException("Class name already exists in the system");
-        }
-        if (checkClassExists) {
-            ClassRequest classRequests = ClassValidator.validateObjectSave(classRequest);
-            classRepository.save(ClassMapper.toClassSave(classRequests));
-        }
+        ClassRequest classRequests = ClassValidator.validateObjectSave(classRequest);
+        checkClassNameExit(classRequest);
+        classRepository.save(ClassMapper.toClassSave(classRequests));
     }
 
     @Override
     public void updateClass(ClassRequest classRequest) {
-        boolean check = false;
-        boolean checkClassExist = checkClassExit(classRequest.getName());
-        List<Class> list = getAllClasses();
-        if (checkClassExist) {
-            for (Class clazzs : list) {
-                if (clazzs.getId() == classRequest.getId()) {
-                    Class findClass = classRepository.findById(classRequest.getId()).orElse(null);
-                    ClassMapper.toClassUpdate(findClass,classRequest);
-//                    findClass.setName(classRequest.getName());
-                    classRepository.save(findClass);
-                    check = true;
-                    break;
-                }
-            }
-        } else {
-            throw new DuplicateRecordException("Class name already exists in the system");
-        }
-        if (!check) {
+        Class classes = getClassByID(classRequest.getId());
+        if(classes == null){
             throw new NotFoundException("No class found");
         }
+        checkClassNameExit(classRequest);
+        ClassMapper.toClassUpdate(classes, classRequest);
+        classRepository.save(classes);
     }
 
     @Override
     public void deleteClass(long id) {
-        boolean check = false;
-        List<Class> listClass = getAllClasses();
-        for (Class classes : listClass) {
-            if (classes.getId() == id) {
-                Class clazz = classRepository.findById(id).orElse(null);
-                classRepository.delete(clazz);
-                check = true;
-                break;
-            }
-        }
-        if (!check) {
+        if (getClassByID(id) == null) {
             throw new NotFoundException("No class found");
         }
+        classRepository.deleteById(id);
     }
 
     //kiểm tra tên lớp đã tồn tại chưa
-    public boolean checkClassExit(String className) {
-        boolean check = true;
-        List<Class> list = getAllClasses();
-        for (Class classes : list) {
-            if (classes.getName().equals(className)) {
-                check = false;
-                break;
-            }
+    public void checkClassNameExit(ClassRequest classRequest) {
+        boolean checkClassNem = classRepository.getClassByName(classRequest.getName()) != null;
+        if (checkClassNem) {
+            throw new DuplicateRecordException("Class name already exists in the system");
         }
-        return check;
     }
 
-
+    public Class getClassByID(long id) {
+        return classRepository.getClassById(id) ;
+    }
 
     @Override //lấy ra class theo id
     public ClassDto findClass(long id) {
-        List<Class> list = getAllClasses();
-        for (Class classes : list) {
-            if (classes.getId() == id) {
-                return ClassMapper.toClassDto(classRepository.findById(id).orElse(null));
-            }
+        Class classes = classRepository.getClassById(id);
+        if (classes == null) {
+            throw new NotFoundException("No class found");
         }
-        throw new NotFoundException("No class found");
+        return ClassMapper.toClassDto(classes);
     }
 
-    @Override
-    public List<Student> findAllStudents(long id) {
-        // lấy ra danh sách sinh viên với điều kiện id của class
-        List<Student> list = studentRepository.findStudent(id);
-        return list;
-    }
-
-
-    @Override// lấy ra tất cả các class trong database
-    public List<Class> getAllClasses() {
-        return classRepository.getAllClass();
-    }
-
-
-
-
-//    @Override
-//    public List<Class> findStudentById(long id) {
-//       List<Class> list = classRepository.myCustomQuery2(id);
-//        return list;
-//    }
 }

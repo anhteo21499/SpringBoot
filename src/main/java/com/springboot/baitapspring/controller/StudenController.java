@@ -17,11 +17,6 @@ public class StudenController {
     @Autowired
     private StudentService studentService;
 
-//    @GetMapping("/{id}")
-//    public ResponseEntity<?> findById(@PathVariable long id){
-//        List<Student> lists = studentService.findAllStudent(id);
-//        return ResponseEntity.ok(lists);
-//    }
     @PostMapping
     public ResponseEntity<?> saveStudent(@RequestBody StudentRequest studentRequest){
         studentService.saveStudent(studentRequest);
@@ -39,11 +34,11 @@ public class StudenController {
          return ResponseEntity.ok().build();
      }
 
-     @GetMapping("/{id}")
-     public ResponseEntity<?> findStudentByID(@PathVariable long id){
-        StudentDto studentDto = studentService.findStudentByID(id);
-         return ResponseEntity.ok(studentDto);
-     }
+//     @GetMapping("/{id}")
+//     public ResponseEntity<?> findStudentByID(@PathVariable long id){
+//        StudentDto studentDto = studentService.findStudentByID(id);
+//         return ResponseEntity.ok(studentDto);
+//     }
 
 //     @GetMapping("/readaddressandtotal")
 //    public ResponseEntity<List<StudentAddressResponse>> getAddressTotal(){

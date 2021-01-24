@@ -17,8 +17,9 @@ public class ClassValidator {
 
     }
     private static boolean checkClassIsBlank(String name){
-        return StringUtils.isBlank(name) ? true : false;
+        return StringUtils.isBlank(name) ;
     }
+
 
 
 }
